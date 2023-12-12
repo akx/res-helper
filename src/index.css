@@ -53,7 +53,7 @@ td {
     width: 100%;
 }
 
-#container {
+#root {
     display: flex;
     gap: 1em;
 }
@@ -71,4 +71,21 @@ button {
 
 button.copied {
     background: lawngreen;
+}
+
+fieldset {
+    margin-bottom: 1em;
+    padding-top: 1em;
+    border-color: #d2d6dc;
+    border-style: dotted;
+}
+
+.button-group {
+    display: flex;
+    gap: 1em;
+    justify-content: space-between;
+}
+
+.button-group > button {
+    flex: 1;
 }
