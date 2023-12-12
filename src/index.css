@@ -89,3 +89,13 @@ fieldset {
 .button-group > button {
     flex: 1;
 }
+
+table tr:hover {
+    background: whitesmoke;
+}
+
+.radio-group {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+}

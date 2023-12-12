@@ -24,12 +24,13 @@ function computeDeltaBarBackground(difference: number, maximum: number) {
   const saturation = Math.max(30, absDeltaDiff * 100);
   const lightness = 70;
   const stopPos = 50 + absDeltaDiff * 50;
-  const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  const color = `hsla(${hue}, ${saturation}%, ${lightness}%, 50%)`;
+  const innerColor = `hsla(${hue}, ${saturation}%, ${lightness}%, 80%)`;
   const gradientDirection = difference > 0 ? "to right" : "to left";
   const gradient =
     `linear-gradient(${gradientDirection}, ` +
     "transparent 0%, transparent 50%, " +
-    `${color} 50%, ${color} ${stopPos}%, ` +
+    `${innerColor} 50%, ${color} ${stopPos}%, ` +
     `transparent ${stopPos}%, transparent 100%` +
     ")";
   return { background: gradient };

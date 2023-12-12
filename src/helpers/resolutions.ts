@@ -12,6 +12,7 @@ interface ResolutionCalculationOptions {
   quantization: number;
   minSize: number;
   maxSize: number;
+  arFilter: (ar: number) => boolean;
 }
 
 export interface Resolution {
@@ -30,6 +31,7 @@ export function calculateResolutions({
   minSize,
   maxSize,
   quantization,
+  arFilter,
 }: ResolutionCalculationOptions): Resolution[] {
   const targetPix = targetMpix * 1024 * 1024;
   const pixLeewayMultiplier = 1 + pixLeeway;
@@ -53,6 +55,8 @@ export function calculateResolutions({
       const height = quantize(h, quantization);
       const pix = width * height;
       const ar = width / height;
+
+      if (!arFilter(ar)) continue;
 
       if (minPix <= pix && pix <= maxPix && minAR <= ar && ar <= maxAR) {
         const resolutionKey = `${width}-${height}`;

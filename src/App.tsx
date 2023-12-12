@@ -6,6 +6,12 @@ import { ResolutionsTable } from "./components/ResolutionsTable.tsx";
 
 const ResolutionsTableMemo = React.memo(ResolutionsTable);
 
+const arFilters = {
+  all: () => true,
+  landscape: (ar: number) => ar > 1,
+  portrait: (ar: number) => ar < 1,
+} as const;
+
 export default function App() {
   const [targetMpix, setTargetMpix] = useState<number>(1);
   const [pixLeeway, setPixLeeway] = useState<number>(0.1);
@@ -14,6 +20,9 @@ export default function App() {
   const [minSize, setMinSize] = useState<number>(512);
   const [maxSize, setMaxSize] = useState<number>(2048);
   const [quantization, setQuantization] = useState<number>(64);
+  const [arFilter, setARFilter] = useState<"all" | "landscape" | "portrait">(
+    "all",
+  );
 
   const setMidSize = (size: number) => {
     setTargetMpix((size * size) / 1024 / 1024);
@@ -39,8 +48,18 @@ export default function App() {
         minSize,
         maxSize,
         quantization,
+        arFilter: arFilters[arFilter],
       }),
-    [targetMpix, pixLeeway, minAR, maxAR, minSize, maxSize, quantization],
+    [
+      targetMpix,
+      pixLeeway,
+      minAR,
+      maxAR,
+      minSize,
+      maxSize,
+      quantization,
+      arFilter,
+    ],
     200,
   );
   return (
@@ -106,6 +125,32 @@ export default function App() {
             value={maxAR}
             onChange={setMaxAR}
           />
+          <div className="radio-group">
+            <label>
+              <input
+                type="radio"
+                checked={arFilter === "all"}
+                onChange={() => setARFilter("all")}
+              />
+              All
+            </label>
+            <label>
+              <input
+                type="radio"
+                checked={arFilter === "landscape"}
+                onChange={() => setARFilter("landscape")}
+              />
+              Landscape
+            </label>
+            <label>
+              <input
+                type="radio"
+                checked={arFilter === "portrait"}
+                onChange={() => setARFilter("portrait")}
+              />
+              Portrait
+            </label>
+          </div>
         </fieldset>
         <NumberControl
           label="Quantization"
