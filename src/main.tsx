@@ -4,10 +4,10 @@ import "./index.css";
 import App from "./App";
 
 const rootElement = document.getElementById("root");
-const root = createRoot(rootElement!);  
+const root = createRoot(rootElement!);
 
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

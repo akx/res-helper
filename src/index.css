@@ -1,101 +1,126 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
-body, input, button, select, textarea {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+body,
+input,
+button,
+select,
+textarea {
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
     sans-serif;
-    font-size: 11pt;
-    line-height: 1.1;
+  font-size: 11pt;
+  line-height: 1.1;
 }
 
 .num-col {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .frac-col {
-    text-align: center;
-    font-variant-numeric: lining-nums;
+  text-align: center;
+  font-variant-numeric: lining-nums;
 }
 
 table {
-    border-collapse: collapse;
+  border-collapse: collapse;
 }
 
 th,
 td {
-    padding: 0.25rem 0.5rem;
-    border: 1px solid #d2d6dc;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d2d6dc;
 }
 
 .num-control {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 .num-control label > span {
-    display: block;
-    padding-bottom: 0.5em;
+  display: block;
+  padding-bottom: 0.5em;
 }
 
 .num-control label > div {
-    display: flex;
-    gap: 1em;
+  display: flex;
+  gap: 1em;
 }
-.num-control label > div > input[type=range] {
-    flex: 2;
+
+.num-control label > div > input[type="range"] {
+  flex: 2;
 }
-.num-control label > div > input[type=number] {
-    flex: 1;
-    text-align: right;
+
+.num-control label > div > input[type="number"] {
+  flex: 1;
+  text-align: right;
 }
 
 .num-control input {
-    width: 100%;
+  width: 100%;
 }
 
 #root {
-    display: flex;
-    gap: 1em;
+  display: flex;
+  gap: 1em;
 }
 
 .ar-preview {
-    height: 1.2rem;
-    color: #dc6d00;
+  height: 1.2rem;
+  color: #dc6d00;
 }
 
 button {
-    background: whitesmoke;
-    border: 1px solid #d2d6dc;
-    padding: 4px 8px;
+  background: whitesmoke;
+  border: 1px solid #d2d6dc;
+  padding: 4px 8px;
 }
 
 button.copied {
-    background: lawngreen;
+  background: lawngreen;
 }
 
 fieldset {
-    margin-bottom: 1em;
-    padding-top: 1em;
-    border-color: #d2d6dc;
-    border-style: dotted;
+  margin-bottom: 1em;
+  padding-top: 1em;
+  border-color: #d2d6dc;
+  border-style: dotted;
 }
 
 .button-group {
-    display: flex;
-    gap: 1em;
-    justify-content: space-between;
+  display: flex;
+  gap: 1em;
+  justify-content: space-between;
 }
 
 .button-group > button {
-    flex: 1;
+  flex: 1;
 }
 
 table tr:hover {
-    background: whitesmoke;
+  background: whitesmoke;
 }
 
 .radio-group {
-    display: flex;
-    gap: 1em;
-    justify-content: center;
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+}
+
+.sdxl-trained {
+  background: rgba(255, 232, 117, 0.3);
+}
+
+ul {
+  margin-top: 0;
+  padding-left: 1em;
 }

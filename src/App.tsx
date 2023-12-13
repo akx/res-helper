@@ -106,6 +106,13 @@ export default function App() {
             value={maxSize}
             onChange={setMaxSize}
           />
+          <NumberControl
+            label="Quantization"
+            min={8}
+            step={1}
+            value={quantization}
+            onChange={setQuantization}
+          />
         </fieldset>
         <fieldset>
           <legend>Aspect Ratio</legend>
@@ -152,13 +159,18 @@ export default function App() {
             </label>
           </div>
         </fieldset>
-        <NumberControl
-          label="Quantization"
-          min={8}
-          step={1}
-          value={quantization}
-          onChange={setQuantization}
-        />
+
+        <fieldset>
+          <legend>Help</legend>
+          <ul>
+            <li>
+              <a href="https://www.reddit.com/r/StableDiffusion/comments/15c3rf6/sdxl_resolution_cheat_sheet/">
+                SDXL trained resolutions
+              </a>{" "}
+              are marked with a golden background.
+            </li>
+          </ul>
+        </fieldset>
       </aside>
       <main>
         <ResolutionsTableMemo

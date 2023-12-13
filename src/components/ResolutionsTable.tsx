@@ -4,6 +4,8 @@ import { getNearestCommonAspectRatio } from "../helpers/commonAspectRatios.ts";
 import { formatFraction, fractionToDecimal } from "../helpers/fractions.ts";
 import { ARPreviewSVG } from "./ARPreviewSVG.tsx";
 import { CopyButton } from "./CopyButton.tsx";
+import cx from "classnames";
+import sdxlTrainedResolutions from "../helpers/sdxlResolutions.ts";
 
 function formatPercentageDelta(percentageDelta: number) {
   if (percentageDelta === 0) return "\u00B1\u20090%";
@@ -38,6 +40,9 @@ function computeDeltaBarBackground(difference: number, maximum: number) {
 
 function ResolutionRow({ res, targetMpix, pixLeeway }: ResolutionRowProps) {
   const { width, height, arFraction, pix } = res;
+  const isSDXLTrainedResolution = sdxlTrainedResolutions.has(
+    `${width}x${height}`,
+  );
   const nearestAR = getNearestCommonAspectRatio(arFraction);
   const nearestARDifference = fractionToDecimal(nearestAR) - res.ar;
   const targetMpixDifference = pix / 1024 / 1024 - targetMpix;
@@ -46,7 +51,12 @@ function ResolutionRow({ res, targetMpix, pixLeeway }: ResolutionRowProps) {
       <td>
         <CopyButton text={`${res.width}x${res.height}`}>Copy</CopyButton>
       </td>
-      <td className="frac-col">
+      <td
+        className={cx({
+          "frac-col": true,
+          "sdxl-trained": isSDXLTrainedResolution,
+        })}
+      >
         {width}&#x2009;&times;&#x2009;{height}
       </td>
       <td className="num-col">{(pix / 1024 / 1024).toFixed(2)}</td>
