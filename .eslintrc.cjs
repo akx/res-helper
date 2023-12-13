@@ -21,5 +21,4 @@ module.exports = {
     "prettier",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],
-
 };
