@@ -23,6 +23,20 @@ export default function App() {
   const [arFilter, setARFilter] = useState<"all" | "landscape" | "portrait">(
     "all",
   );
+  const [useTargetAR, setUseTargetAR] = useState<boolean>(false);
+  const [targetAR, setTargetAR] = useState<string>("1");
+
+  const parsedTargetAR = React.useMemo(() => {
+    if (!useTargetAR) return null;
+    const m = targetAR.match(/^(\d+)\s*[:/x]\s*(\d+)$/);
+    if (m) {
+      const parsedAr = Number(m[1]) / Number(m[2]);
+      if (!isNaN(parsedAr) && parsedAr > 0) return parsedAr;
+    }
+    const parsedAr = Number(targetAR);
+    if (isNaN(parsedAr) || parsedAr < 0) return null;
+    return parsedAr;
+  }, [useTargetAR, targetAR]);
 
   const setMidSize = (size: number) => {
     setTargetMpix((size * size) / 1024 / 1024);
@@ -158,6 +172,20 @@ export default function App() {
               Portrait
             </label>
           </div>
+          <label>
+            <input
+              type="checkbox"
+              checked={useTargetAR}
+              onChange={() => setUseTargetAR(!useTargetAR)}
+            />
+            Use target AR:&nbsp;
+          </label>
+          <input
+            type="text"
+            value={targetAR}
+            onChange={(e) => setTargetAR(e.target.value)}
+            disabled={!useTargetAR}
+          />
         </fieldset>
 
         <fieldset>
@@ -177,6 +205,7 @@ export default function App() {
           resolutions={resolutions}
           targetMpix={targetMpix}
           pixLeeway={pixLeeway}
+          targetAR={parsedTargetAR}
         />
       </main>
     </>

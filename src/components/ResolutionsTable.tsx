@@ -17,6 +17,7 @@ interface ResolutionRowProps {
   res: Resolution;
   targetMpix: number;
   pixLeeway: number;
+  targetAR: number | null;
 }
 
 function computeDeltaBarBackground(difference: number, maximum: number) {
@@ -38,13 +39,19 @@ function computeDeltaBarBackground(difference: number, maximum: number) {
   return { background: gradient };
 }
 
-function ResolutionRow({ res, targetMpix, pixLeeway }: ResolutionRowProps) {
+function ResolutionRow({
+  res,
+  targetMpix,
+  pixLeeway,
+  targetAR,
+}: ResolutionRowProps) {
   const { width, height, arFraction, pix } = res;
   const isSDXLTrainedResolution = sdxlTrainedResolutions.has(
     `${width}x${height}`,
   );
   const nearestAR = getNearestCommonAspectRatio(arFraction);
   const nearestARDifference = fractionToDecimal(nearestAR) - res.ar;
+  const targetARDifference = targetAR ? targetAR - res.ar : null;
   const targetMpixDifference = pix / 1024 / 1024 - targetMpix;
   return (
     <tr>
@@ -83,6 +90,14 @@ function ResolutionRow({ res, targetMpix, pixLeeway }: ResolutionRowProps) {
       >
         {formatPercentageDelta(nearestARDifference)}
       </td>
+      {targetARDifference !== null ? (
+        <td
+          className="num-col"
+          style={computeDeltaBarBackground(targetARDifference, 1)}
+        >
+          {formatPercentageDelta(targetARDifference)}
+        </td>
+      ) : null}
     </tr>
   );
 }
@@ -91,12 +106,14 @@ interface ResolutionsTableProps {
   resolutions: Resolution[];
   targetMpix: number;
   pixLeeway: number;
+  targetAR: number | null;
 }
 
 export function ResolutionsTable({
   targetMpix,
   resolutions,
   pixLeeway,
+  targetAR,
 }: ResolutionsTableProps) {
   return (
     <table>
@@ -110,6 +127,7 @@ export function ResolutionsTable({
           <th>Aspect Ratio (decimal)</th>
           <th>Nearest Common Aspect Ratio</th>
           <th>&Delta; Common Aspect Ratio</th>
+          {targetAR !== null && <th>&Delta; Target Aspect Ratio</th>}
         </tr>
       </thead>
       <tbody>
@@ -119,6 +137,7 @@ export function ResolutionsTable({
             res={res}
             targetMpix={targetMpix}
             pixLeeway={pixLeeway}
+            targetAR={targetAR}
           />
         ))}
       </tbody>
