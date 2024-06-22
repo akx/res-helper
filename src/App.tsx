@@ -74,7 +74,19 @@ export default function App() {
       quantization,
       arFilter,
     ],
-    200,
+    (lastDeps, currentDeps) => {
+      // Update immediately if a string or boolean value is changed, otherwise
+      // debounce a bit.
+      if (lastDeps.length !== currentDeps.length) return 0;
+      for (let i = 0; i < lastDeps.length; i++) {
+        if (
+          lastDeps[i] !== currentDeps[i] &&
+          typeof currentDeps[i] !== "number"
+        )
+          return 0;
+      }
+      return 100;
+    },
   );
   return (
     <>
