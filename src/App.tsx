@@ -25,6 +25,8 @@ export default function App() {
   );
   const [useTargetAR, setUseTargetAR] = useState<boolean>(false);
   const [targetAR, setTargetAR] = useState<string>("1");
+  const [onlyTrainedResolutions, setOnlyTrainedResolutions] =
+    useState<boolean>(false);
 
   const parsedTargetAR = React.useMemo(() => {
     if (!useTargetAR) return null;
@@ -208,6 +210,15 @@ export default function App() {
                 SDXL trained resolutions
               </a>{" "}
               are marked with a golden background.
+              <br />
+              <label>
+                <input
+                  type="checkbox"
+                  checked={onlyTrainedResolutions}
+                  onChange={(e) => setOnlyTrainedResolutions(e.target.checked)}
+                />
+                Show only SDXL trained resolutions
+              </label>
             </li>
           </ul>
         </fieldset>
@@ -218,6 +229,7 @@ export default function App() {
           targetMpix={targetMpix}
           pixLeeway={pixLeeway}
           targetAR={parsedTargetAR}
+          onlyTrainedResolutions={onlyTrainedResolutions}
         />
       </main>
     </>

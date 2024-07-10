@@ -18,6 +18,7 @@ interface ResolutionRowProps {
   targetMpix: number;
   pixLeeway: number;
   targetAR: number | null;
+  onlyTrainedResolutions: boolean;
 }
 
 function computeDeltaBarBackground(difference: number, maximum: number) {
@@ -44,11 +45,13 @@ function ResolutionRow({
   targetMpix,
   pixLeeway,
   targetAR,
+  onlyTrainedResolutions,
 }: ResolutionRowProps) {
   const { width, height, arFraction, pix } = res;
   const isSDXLTrainedResolution = sdxlTrainedResolutions.has(
     `${width}x${height}`,
   );
+  if (onlyTrainedResolutions && !isSDXLTrainedResolution) return null;
   const nearestAR = getNearestCommonAspectRatio(arFraction);
   const nearestARDifference = fractionToDecimal(nearestAR) - res.ar;
   const targetARDifference = targetAR ? targetAR - res.ar : null;
@@ -107,6 +110,7 @@ interface ResolutionsTableProps {
   targetMpix: number;
   pixLeeway: number;
   targetAR: number | null;
+  onlyTrainedResolutions: boolean;
 }
 
 export function ResolutionsTable({
@@ -114,6 +118,7 @@ export function ResolutionsTable({
   resolutions,
   pixLeeway,
   targetAR,
+  onlyTrainedResolutions,
 }: ResolutionsTableProps) {
   return (
     <table>
@@ -138,6 +143,7 @@ export function ResolutionsTable({
             targetMpix={targetMpix}
             pixLeeway={pixLeeway}
             targetAR={targetAR}
+            onlyTrainedResolutions={onlyTrainedResolutions}
           />
         ))}
       </tbody>
