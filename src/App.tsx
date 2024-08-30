@@ -3,6 +3,7 @@ import { calculateResolutions } from "./helpers/resolutions.ts";
 import useDebouncedMemo from "./hooks/useDebouncedMemo.ts";
 import { NumberControl } from "./components/NumberControl.tsx";
 import { ResolutionsTable } from "./components/ResolutionsTable.tsx";
+import { getDefaultState, State, stateSchema } from "./state.ts";
 
 const ResolutionsTableMemo = React.memo(ResolutionsTable);
 
@@ -12,21 +13,48 @@ const arFilters = {
   portrait: (ar: number) => ar < 1,
 } as const;
 
+const localStorageStateKey = "res-helper-state-v1";
+
+function usePersistedState() {
+  const [state, setState] = useState<State>(() => {
+    try {
+      return stateSchema.parse(
+        JSON.parse(localStorage.getItem(localStorageStateKey) ?? "{}"),
+      );
+    } catch (e) {
+      return getDefaultState();
+    }
+  });
+
+  const setStateValue = React.useCallback(function setStateValue(
+    key: keyof State,
+    value: State[keyof State],
+  ) {
+    setState((prev) => ({ ...prev, [key]: value }));
+  }, []);
+
+  React.useEffect(() => {
+    localStorage.setItem(localStorageStateKey, JSON.stringify(state));
+  }, [state]);
+  return { state, setState, setStateValue };
+}
+
 export default function App() {
-  const [targetMpix, setTargetMpix] = useState<number>(1);
-  const [pixLeeway, setPixLeeway] = useState<number>(0.1);
-  const [minAR, setMinAR] = useState<number>(0.5);
-  const [maxAR, setMaxAR] = useState<number>(2.0);
-  const [minSize, setMinSize] = useState<number>(512);
-  const [maxSize, setMaxSize] = useState<number>(2048);
-  const [quantization, setQuantization] = useState<number>(64);
-  const [arFilter, setARFilter] = useState<"all" | "landscape" | "portrait">(
-    "all",
-  );
-  const [useTargetAR, setUseTargetAR] = useState<boolean>(false);
-  const [targetAR, setTargetAR] = useState<string>("1");
-  const [onlyTrainedResolutions, setOnlyTrainedResolutions] =
-    useState<boolean>(false);
+  const { state, setState, setStateValue } = usePersistedState();
+
+  const {
+    targetMpix,
+    pixLeeway,
+    minAR,
+    maxAR,
+    minSize,
+    maxSize,
+    quantization,
+    arFilter,
+    useTargetAR,
+    targetAR,
+    onlyTrainedResolutions,
+  } = state;
 
   const parsedTargetAR = React.useMemo(() => {
     if (!useTargetAR) return null;
@@ -41,9 +69,12 @@ export default function App() {
   }, [useTargetAR, targetAR]);
 
   const setMidSize = (size: number) => {
-    setTargetMpix((size * size) / 1024 / 1024);
-    setMinSize(size / 2);
-    setMaxSize(size * 2);
+    setState((prev) => ({
+      ...prev,
+      minSize: size / 2,
+      maxSize: size * 2,
+      targetMpix: (size * size) / 1024 / 1024,
+    }));
   };
 
   const loadSD15Preset = () => {
@@ -108,7 +139,7 @@ export default function App() {
             min={0.01}
             step={0.5}
             sliderMax={5}
-            onChange={setTargetMpix}
+            onChange={(v) => setStateValue("targetMpix", v)}
           />
           <NumberControl
             label="Allowed Target Leeway"
@@ -116,7 +147,7 @@ export default function App() {
             min={0}
             max={1}
             step={0.01}
-            onChange={setPixLeeway}
+            onChange={(v) => setStateValue("pixLeeway", v)}
           />
           <NumberControl
             label="Minimum Size"
@@ -124,7 +155,7 @@ export default function App() {
             step={8}
             sliderMax={4096}
             value={minSize}
-            onChange={setMinSize}
+            onChange={(v) => setStateValue("minSize", v)}
           />
           <NumberControl
             label="Maximum Size"
@@ -132,14 +163,14 @@ export default function App() {
             step={8}
             sliderMax={4096}
             value={maxSize}
-            onChange={setMaxSize}
+            onChange={(v) => setStateValue("maxSize", v)}
           />
           <NumberControl
             label="Quantization"
             min={8}
             step={1}
             value={quantization}
-            onChange={setQuantization}
+            onChange={(v) => setStateValue("quantization", v)}
           />
         </fieldset>
         <fieldset>
@@ -150,7 +181,7 @@ export default function App() {
             step={0.01}
             sliderMax={4}
             value={minAR}
-            onChange={setMinAR}
+            onChange={(v) => setStateValue("minAR", v)}
           />
           <NumberControl
             label="Maximum AR"
@@ -158,14 +189,14 @@ export default function App() {
             step={0.01}
             sliderMax={4}
             value={maxAR}
-            onChange={setMaxAR}
+            onChange={(v) => setStateValue("maxAR", v)}
           />
           <div className="radio-group">
             <label>
               <input
                 type="radio"
                 checked={arFilter === "all"}
-                onChange={() => setARFilter("all")}
+                onChange={() => setStateValue("arFilter", "all")}
               />
               All
             </label>
@@ -173,7 +204,7 @@ export default function App() {
               <input
                 type="radio"
                 checked={arFilter === "landscape"}
-                onChange={() => setARFilter("landscape")}
+                onChange={() => setStateValue("arFilter", "landscape")}
               />
               Landscape
             </label>
@@ -181,7 +212,7 @@ export default function App() {
               <input
                 type="radio"
                 checked={arFilter === "portrait"}
-                onChange={() => setARFilter("portrait")}
+                onChange={() => setStateValue("arFilter", "portrait")}
               />
               Portrait
             </label>
@@ -190,14 +221,14 @@ export default function App() {
             <input
               type="checkbox"
               checked={useTargetAR}
-              onChange={() => setUseTargetAR(!useTargetAR)}
+              onChange={(e) => setStateValue("useTargetAR", e.target.checked)}
             />
             Use target AR:&nbsp;
           </label>
           <input
             type="text"
             value={targetAR}
-            onChange={(e) => setTargetAR(e.target.value)}
+            onChange={(e) => setStateValue("targetAR", e.target.value)}
             disabled={!useTargetAR}
           />
         </fieldset>
@@ -215,12 +246,16 @@ export default function App() {
                 <input
                   type="checkbox"
                   checked={onlyTrainedResolutions}
-                  onChange={(e) => setOnlyTrainedResolutions(e.target.checked)}
+                  onChange={(e) =>
+                    setStateValue("onlyTrainedResolutions", e.target.checked)
+                  }
                 />
                 Show only SDXL trained resolutions
               </label>
             </li>
           </ul>
+          <hr />
+          <button onClick={() => setState(getDefaultState())}>Reset</button>
         </fieldset>
       </aside>
       <main>
