@@ -125,8 +125,12 @@ export default function App() {
         <fieldset>
           <legend>Presets</legend>
           <div className="button-group">
-            <button onClick={loadSD15Preset}>SD1.5 (512&times;512)</button>
-            <button onClick={loadSDXLPreset}>SDXL (1024&times;1024)</button>
+            <button className="control-button" onClick={loadSD15Preset}>
+              SD1.5 (512&times;512)
+            </button>
+            <button className="control-button" onClick={loadSDXLPreset}>
+              SDXL (1024&times;1024)
+            </button>
           </div>
         </fieldset>
         <fieldset>
@@ -235,6 +239,9 @@ export default function App() {
           <legend>Help</legend>
           <ul>
             <li>
+              Click the resolution cell to copy the resolution to the clipboard.
+            </li>
+            <li>
               <a href="https://www.reddit.com/r/StableDiffusion/comments/15c3rf6/sdxl_resolution_cheat_sheet/">
                 SDXL trained resolutions
               </a>{" "}
@@ -253,7 +260,12 @@ export default function App() {
             </li>
           </ul>
           <hr />
-          <button onClick={() => setState(getDefaultState())}>Reset</button>
+          <button
+            className="control-button"
+            onClick={() => setState(getDefaultState())}
+          >
+            Reset
+          </button>
         </fieldset>
       </aside>
       <main>

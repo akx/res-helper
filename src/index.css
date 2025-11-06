@@ -79,14 +79,18 @@ td {
   color: #dc6d00;
 }
 
-button {
+button.control-button {
   background: whitesmoke;
   border: 1px solid #d2d6dc;
   padding: 4px 8px;
 }
 
-button.copied {
-  background: lawngreen;
+button.copy-button {
+  background: transparent;
+  border: none;
+  cursor: copy;
+  text-decoration: underline dotted;
+  border-radius: 1em;
 }
 
 fieldset {
