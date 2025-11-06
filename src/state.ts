@@ -24,7 +24,7 @@ export function getDefaultState(): State {
     targetMpix: 1,
     pixLeeway: 0.1,
     minAR: 0.5,
-    maxAR: 2.0,
+    maxAR: 2,
     minSize: 512,
     maxSize: 2048,
     quantization: 64,

@@ -1,11 +1,12 @@
+import cx from "classnames";
 import React from "react";
-import { Resolution } from "../helpers/resolutions.ts";
+
 import { getNearestCommonAspectRatio } from "../helpers/commonAspectRatios.ts";
 import { formatFraction, fractionToDecimal } from "../helpers/fractions.ts";
+import { Resolution } from "../helpers/resolutions.ts";
+import sdxlTrainedResolutions from "../helpers/sdxlResolutions.ts";
 import { ARPreviewSVG } from "./ARPreviewSVG.tsx";
 import { CopyButton } from "./CopyButton.tsx";
-import cx from "classnames";
-import sdxlTrainedResolutions from "../helpers/sdxlResolutions.ts";
 
 function formatPercentageDelta(percentageDelta: number) {
   if (percentageDelta === 0) return "\u00B1\u20090%";
@@ -23,7 +24,7 @@ interface ResolutionRowProps {
 
 function computeDeltaBarBackground(difference: number, maximum: number) {
   const absDeltaDiff = Math.abs(difference / maximum);
-  if (absDeltaDiff < 0.01) return undefined;
+  if (absDeltaDiff < 0.01) return;
   const hue = difference < 0 ? 20 : 140;
   const saturation = Math.max(30, absDeltaDiff * 100);
   const lightness = 70;
@@ -93,14 +94,14 @@ function ResolutionRow({
       >
         {formatPercentageDelta(nearestARDifference)}
       </td>
-      {targetARDifference !== null ? (
+      {targetARDifference === null ? null : (
         <td
           className="num-col"
           style={computeDeltaBarBackground(targetARDifference, 1)}
         >
           {formatPercentageDelta(targetARDifference)}
         </td>
-      ) : null}
+      )}
     </tr>
   );
 }
