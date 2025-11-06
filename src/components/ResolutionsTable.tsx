@@ -59,16 +59,15 @@ function ResolutionRow({
   const targetMpixDifference = pix / 1024 / 1024 - targetMpix;
   return (
     <tr>
-      <td>
-        <CopyButton text={`${res.width}x${res.height}`}>Copy</CopyButton>
-      </td>
       <td
         className={cx({
           "frac-col": true,
           "sdxl-trained": isSDXLTrainedResolution,
         })}
       >
-        {width}&#x2009;&times;&#x2009;{height}
+        <CopyButton text={`${res.width}x${res.height}`}>
+          {width}&#x2009;&times;&#x2009;{height}
+        </CopyButton>
       </td>
       <td className="num-col">{(pix / 1024 / 1024).toFixed(2)}</td>
       <td
@@ -125,7 +124,6 @@ export function ResolutionsTable({
     <table>
       <thead>
         <tr>
-          <th></th>
           <th>Size</th>
           <th>MPix</th>
           <th>&Delta; MPix Target</th>

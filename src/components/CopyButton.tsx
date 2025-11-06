@@ -1,9 +1,18 @@
 import React from "react";
 
-function blink(element: HTMLElement | null, className: string) {
-  if (element) {
-    element.classList.add(className);
-    setTimeout(() => element.classList.remove(className), 200);
+function blink(element: HTMLElement | null) {
+  if (element?.animate) {
+    element.animate(
+      [
+        { offset: 0, background: "lawngreen" },
+        { offset: 0.5, opacity: 0 },
+        { offset: 1, opacity: 1 },
+      ],
+      {
+        duration: 500,
+        easing: "ease-in-out",
+      },
+    );
   }
 }
 
@@ -18,10 +27,9 @@ export function CopyButton({ text, children, ...props }: CopyButtonProps) {
     <button
       ref={ref}
       type="button"
+      className="copy-button"
       onClick={() =>
-        navigator.clipboard
-          .writeText(text)
-          .then(() => blink(ref.current, "copied"))
+        navigator.clipboard.writeText(text).then(() => blink(ref.current))
       }
       {...props}
     >
