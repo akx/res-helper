@@ -75,5 +75,6 @@ export function calculateResolutions({
     }
   }
 
+  // eslint-disable-next-line unicorn/no-array-sort
   return options.sort((a, b) => a.ar - b.ar);
 }

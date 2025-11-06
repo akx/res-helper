@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { calculateResolutions } from "./helpers/resolutions.ts";
-import useDebouncedMemo from "./hooks/useDebouncedMemo.ts";
+
 import { NumberControl } from "./components/NumberControl.tsx";
 import { ResolutionsTable } from "./components/ResolutionsTable.tsx";
+import { calculateResolutions } from "./helpers/resolutions.ts";
+import useDebouncedMemo from "./hooks/useDebouncedMemo.ts";
 import { getDefaultState, State, stateSchema } from "./state.ts";
 
 const ResolutionsTableMemo = React.memo(ResolutionsTable);
@@ -21,7 +22,7 @@ function usePersistedState() {
       return stateSchema.parse(
         JSON.parse(localStorage.getItem(localStorageStateKey) ?? "{}"),
       );
-    } catch (e) {
+    } catch (_error) {
       return getDefaultState();
     }
   });
@@ -61,10 +62,10 @@ export default function App() {
     const m = targetAR.match(/^(\d+)\s*[:/x]\s*(\d+)$/);
     if (m) {
       const parsedAr = Number(m[1]) / Number(m[2]);
-      if (!isNaN(parsedAr) && parsedAr > 0) return parsedAr;
+      if (!Number.isNaN(parsedAr) && parsedAr > 0) return parsedAr;
     }
     const parsedAr = Number(targetAR);
-    if (isNaN(parsedAr) || parsedAr < 0) return null;
+    if (Number.isNaN(parsedAr) || parsedAr < 0) return null;
     return parsedAr;
   }, [useTargetAR, targetAR]);
 
@@ -111,11 +112,8 @@ export default function App() {
       // Update immediately if a string or boolean value is changed, otherwise
       // debounce a bit.
       if (lastDeps.length !== currentDeps.length) return 0;
-      for (let i = 0; i < lastDeps.length; i++) {
-        if (
-          lastDeps[i] !== currentDeps[i] &&
-          typeof currentDeps[i] !== "number"
-        )
+      for (const [i, lastDep] of lastDeps.entries()) {
+        if (lastDep !== currentDeps[i] && typeof currentDeps[i] !== "number")
           return 0;
       }
       return 100;
