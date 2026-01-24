@@ -87,10 +87,11 @@ button.control-button {
 
 button.copy-button {
   background: transparent;
+  border-radius: 1em;
   border: none;
   cursor: copy;
   text-decoration: underline dotted;
-  border-radius: 1em;
+  white-space: nowrap;
 }
 
 fieldset {
